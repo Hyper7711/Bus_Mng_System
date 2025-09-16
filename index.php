@@ -3,22 +3,17 @@
 <html>
 <head>
     <title>🚍 Student Bus Management System</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>🚍 Student Bus Management System</h1>
-    <p>Welcome! Choose an option below:</p>
+    <div class="container">
+        <h1>🚍 Student Bus Management System</h1>
+        <p>Welcome! Choose an option below:</p>
 
-    <a href="admin/dashboard.php">
-        <button style="padding:10px 20px; margin:10px;">Admin Dashboard</button>
-    </a>
-
-    <a href="reports/students.php">
-        <button style="padding:10px 20px; margin:10px;">View Student Reports</button>
-    </a>
-
-    <a href="reports/buses.php">
-        <button style="padding:10px 20px; margin:10px;">View Bus Reports</button>
-    </a>
+        <div class="button-group">
+            <a href="admin/dashboard.php" class="btn">Admin Dashboard</a>
+            <a href="reports/bus_allocation.php" class="btn">View Bus Allocation Report</a>
+        </div>
+    </div>
 </body>
 </html>
