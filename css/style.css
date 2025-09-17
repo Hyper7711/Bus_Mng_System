@@ -1,81 +1,60 @@
-body {
+/* Reset some defaults */
+body, html {
     margin: 0;
+    padding: 0;
+    height: 100%;
     font-family: 'Poppins', sans-serif;
-    background: #F3F4F6; /* light gray background */
+    background: linear-gradient(135deg, #2563EB, #3B82F6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Main container */
-.dashboard-container {
-    max-width: 1000px;
-    margin: 50px auto;
-    padding: 30px;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+/* Main centered container */
+.main-container {
     text-align: center;
+    background: white;
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    width: 90%;
 }
 
 /* Heading */
 h1 {
+    margin-bottom: 10px;
+    font-size: 28px;
     color: #1E3A8A;
 }
+
 p {
     color: #374151;
-    margin-bottom: 40px;
+    font-size: 16px;
+    margin-bottom: 30px;
 }
 
-/* Cards container */
-.cards {
+/* Buttons */
+.button-group {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+    flex-direction: column;
+    gap: 15px;
 }
 
-/* Each card */
-.card {
-    background: #1E40AF; /* dark blue */
-    color: #ffffff;
-    text-decoration: none;
-    padding: 30px 40px;
-    border-radius: 12px;
-    width: 200px;
-    transition: 0.3s;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-.card h2 {
-    margin: 0 0 10px;
-}
-.card p {
-    margin: 0;
-}
-.card:hover {
-    background: #3B82F6;
-    transform: translateY(-5px);
-}
-
-/* Back button */
-.btn-back {
-    display: inline-block;
-    margin-top: 40px;
-    padding: 12px 25px;
-    background: #6B7280; /* gray */
+.btn {
+    display: block;
+    padding: 15px 20px;
+    background: #1E40AF;
     color: white;
     text-decoration: none;
-    border-radius: 8px;
-    transition: 0.3s;
-}
-.btn-back:hover {
-    background: #4B5563;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 500;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .cards {
-        flex-direction: column;
-        align-items: center;
-    }
-    .card {
-        width: 80%;
-    }
+.btn:hover {
+    background: #3B82F6;
+    transform: translateY(-3px);
 }
