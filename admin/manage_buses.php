@@ -18,22 +18,22 @@ if (isset($_GET['delete_id'])) {
 
 // ✅ Handle Add/Edit Form Submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $bus_no   = trim($_POST['bus_no']);
-    $capacity = (int) $_POST['capacity'];
-    $driver_id = $_POST['driver_id'];
-    $route_id  = $_POST['route_id'];
+    $bus_number = trim($_POST['bus_no']); // Updated for DB column
+    $capacity   = (int) $_POST['capacity'];
+    $driver_id  = $_POST['driver_id'];
+    $route_id   = $_POST['route_id'];
 
     // If editing
     if (isset($_POST['bus_id']) && !empty($_POST['bus_id'])) {
         $bus_id = $_POST['bus_id'];
         try {
-            $stmt = $conn->prepare("UPDATE buses SET bus_no=:bus_no, capacity=:capacity, driver_id=:driver_id, route_id=:route_id WHERE bus_id=:bus_id");
+            $stmt = $conn->prepare("UPDATE buses SET bus_number=:bus_number, capacity=:capacity, driver_id=:driver_id, route_id=:route_id WHERE bus_id=:bus_id");
             $stmt->execute([
-                ':bus_no' => $bus_no,
-                ':capacity' => $capacity,
-                ':driver_id' => $driver_id,
-                ':route_id' => $route_id,
-                ':bus_id' => $bus_id
+                ':bus_number' => $bus_number,
+                ':capacity'   => $capacity,
+                ':driver_id'  => $driver_id,
+                ':route_id'   => $route_id,
+                ':bus_id'     => $bus_id
             ]);
             $success = "✏️ Bus updated successfully!";
         } catch (PDOException $e) {
@@ -41,12 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else { // Add new bus
         try {
-            $stmt = $conn->prepare("INSERT INTO buses (bus_no, capacity, driver_id, route_id) VALUES (:bus_no, :capacity, :driver_id, :route_id)");
+            $stmt = $conn->prepare("INSERT INTO buses (bus_number, capacity, driver_id, route_id) VALUES (:bus_number, :capacity, :driver_id, :route_id)");
             $stmt->execute([
-                ':bus_no' => $bus_no,
-                ':capacity' => $capacity,
-                ':driver_id' => $driver_id,
-                ':route_id' => $route_id
+                ':bus_number' => $bus_number,
+                ':capacity'   => $capacity,
+                ':driver_id'  => $driver_id,
+                ':route_id'   => $route_id
             ]);
             $success = "✅ Bus added successfully!";
         } catch (PDOException $e) {
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // ✅ Fetch buses, drivers, and routes
 $drivers = $conn->query("SELECT driver_id, name FROM drivers")->fetchAll(PDO::FETCH_ASSOC);
 $routes  = $conn->query("SELECT route_id, start_point, end_point FROM routes")->fetchAll(PDO::FETCH_ASSOC);
-$buses   = $conn->query("SELECT b.bus_id, b.bus_no, b.capacity, d.name AS driver_name, r.start_point, r.end_point 
+$buses   = $conn->query("SELECT b.bus_id, b.bus_number, b.capacity, d.name AS driver_name, r.start_point, r.end_point 
                          FROM buses b
                          LEFT JOIN drivers d ON b.driver_id=d.driver_id
                          LEFT JOIN routes r ON b.route_id=r.route_id
@@ -219,7 +219,7 @@ if (isset($_GET['edit_id'])) {
         <!-- Add/Edit Bus Form -->
         <form method="POST">
             <input type="hidden" name="bus_id" value="<?= $edit_bus['bus_id'] ?? '' ?>">
-            <input type="text" name="bus_no" placeholder="Bus Number" value="<?= $edit_bus['bus_no'] ?? '' ?>" required>
+            <input type="text" name="bus_no" placeholder="Bus Number" value="<?= $edit_bus['bus_number'] ?? '' ?>" required>
             <input type="number" name="capacity" placeholder="Capacity" value="<?= $edit_bus['capacity'] ?? '' ?>" required>
 
             <select name="driver_id" required>
@@ -265,7 +265,7 @@ if (isset($_GET['edit_id'])) {
                         <?php foreach ($buses as $bus): ?>
                         <tr>
                             <td><?= $bus['bus_id'] ?></td>
-                            <td><?= htmlspecialchars($bus['bus_no']) ?></td>
+                            <td><?= htmlspecialchars($bus['bus_number']) ?></td>
                             <td><?= $bus['capacity'] ?></td>
                             <td><?= htmlspecialchars($bus['driver_name']) ?></td>
                             <td><?= htmlspecialchars($bus['start_point']) ?> ➡ <?= htmlspecialchars($bus['end_point']) ?></td>
