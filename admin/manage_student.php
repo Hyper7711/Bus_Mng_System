@@ -20,14 +20,14 @@ if (isset($_GET['delete_id'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $student_id = $_POST['student_id'] ?? null;
     $name       = trim($_POST['name']);
-    $class      = trim($_POST['class']);
+    $roll_no    = trim($_POST['roll_no'] ?? '');
 
     if ($student_id) { // Edit
         try {
-            $stmt = $conn->prepare("UPDATE students SET name=:name, class=:class WHERE student_id=:student_id");
+            $stmt = $conn->prepare("UPDATE students SET name=:name, roll_no=:roll_no WHERE student_id=:student_id");
             $stmt->execute([
                 ':name' => $name,
-                ':class' => $class,
+                ':roll_no' => $roll_no,
                 ':student_id' => $student_id
             ]);
             $success = "✏️ Student updated successfully!";
@@ -36,10 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else { // Add
         try {
-            $stmt = $conn->prepare("INSERT INTO students (name, class) VALUES (:name, :class)");
+            $stmt = $conn->prepare("INSERT INTO students (name, roll_no) VALUES (:name, :roll_no)");
             $stmt->execute([
                 ':name' => $name,
-                ':class' => $class
+                ':roll_no' => $roll_no
             ]);
             $success = "✅ Student added successfully!";
         } catch (PDOException $e) {
@@ -68,24 +68,8 @@ if (isset($_GET['edit_id'])) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manage Students</title>
 <style>
-    body {
-        margin: 0;
-        font-family: "Segoe UI", sans-serif;
-        background: linear-gradient(135deg, #4facfe, #00f2fe);
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        min-height: 100vh;
-        padding: 30px;
-    }
-    .card {
-        width: 100%;
-        max-width: 900px;
-        background: white;
-        padding: 25px;
-        border-radius: 16px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    }
+    body { margin: 0; font-family: "Segoe UI", sans-serif; background: linear-gradient(135deg, #4facfe, #00f2fe); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 30px; }
+    .card { width: 100%; max-width: 900px; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
     h2 { text-align: center; font-size: 2rem; margin-bottom: 20px; color: #2c3e50; }
     .message { font-weight: 600; margin: 10px 0; text-align: center; font-size: 1rem; border-radius: 8px; padding: 10px; }
     .success { background: #e8fdf0; color: #1e7b34; border: 1px solid #a9e5b9; }
@@ -128,7 +112,7 @@ if (isset($_GET['edit_id'])) {
     <form method="POST">
         <input type="hidden" name="student_id" value="<?= $edit_student['student_id'] ?? '' ?>">
         <input type="text" name="name" placeholder="Student Name" value="<?= $edit_student['name'] ?? '' ?>" required>
-        <input type="text" name="class" placeholder="Class" value="<?= $edit_student['class'] ?? '' ?>" required>
+        <input type="text" name="roll_no" placeholder="Roll No" value="<?= $edit_student['roll_no'] ?? '' ?>">
         <button type="submit"><?= isset($edit_student) ? "Update Student" : "Add Student" ?></button>
         <?php if(isset($edit_student)): ?>
             <a href="manage_student.php"><button type="button">Cancel Edit</button></a>
@@ -147,7 +131,7 @@ if (isset($_GET['edit_id'])) {
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Class</th>
+                    <th>Roll No</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -156,7 +140,7 @@ if (isset($_GET['edit_id'])) {
                     <tr>
                         <td><?= $student['student_id'] ?></td>
                         <td><?= htmlspecialchars($student['name']) ?></td>
-                        <td><?= htmlspecialchars($student['class']) ?></td>
+                        <td><?= htmlspecialchars($student['roll_no']) ?></td>
                         <td>
                             <a class="action-btn edit-btn" href="manage_student.php?edit_id=<?= $student['student_id'] ?>">Edit</a>
                             <a class="action-btn delete-btn" href="manage_student.php?delete_id=<?= $student['student_id'] ?>" onclick="return confirm('Are you sure to delete this student?');">Delete</a>
