@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // ✅ Fetch Data
 $drivers = $conn->query("SELECT driver_id, name FROM drivers")->fetchAll(PDO::FETCH_ASSOC);
 $routes  = $conn->query("SELECT route_id, start_point, end_point FROM routes")->fetchAll(PDO::FETCH_ASSOC);
-$buses   = $conn->query("SELECT b.bus_id, b.bus_number, b.capacity, d.name AS driver_name, r.start_point, r.end_point 
+$buses = $conn->query("SELECT b.bus_id, b.bus_number, b.capacity, b.mileage, b.last_service_date, d.name AS driver_name, r.start_point, r.end_point 
                          FROM buses b
                          LEFT JOIN drivers d ON b.driver_id=d.driver_id
                          LEFT JOIN routes r ON b.route_id=r.route_id
@@ -153,9 +153,9 @@ th { background:#f9fafb;}
 <?php foreach ($buses as $bus): ?>
 
 <?php
-// Temporary AI values (replace later with DB columns)
-$mileage = 10000;
-$days = rand(1,100);
+
+$mileage = $bus['mileage'];
+$days = (strtotime(date('Y-m-d')) - strtotime($bus['last_service_date'])) / (60*60*24);
 
 $ai = get_ai_prediction($mileage, $days);
 ?>
