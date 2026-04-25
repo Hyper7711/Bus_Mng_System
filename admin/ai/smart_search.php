@@ -54,37 +54,40 @@ class SmartRouteSearch {
     }
     
     /**
-     * Recommend best route based on multiple factors (PDO FIXED)
+     * Recommend best route (IMPROVED LOGIC)
      */
     public function recommendRoute($source, $destination, $travel_date) {
-        $query = "SELECT r.*, b.bus_number as bus_name, b.capacity,
-                    (SELECT COUNT(*) FROM bookings bk 
-                     WHERE bk.route_id = r.route_id 
-                     AND DATE(bk.booking_date) = ?) as booked_seats
+        
+        // 🔥 Step 1: Auto-correct using fuzzy search
+        $srcSuggestions = $this->fuzzySearch($source);
+        $destSuggestions = $this->fuzzySearch($destination);
+        
+        $source = !empty($srcSuggestions) ? $srcSuggestions[0]['location'] : $source;
+        $destination = !empty($destSuggestions) ? $destSuggestions[0]['location'] : $destination;
+
+        // 🔥 Step 2: Flexible query (NOT strict)
+        $query = "SELECT r.*, b.bus_number as bus_name, b.capacity
                   FROM routes r
                   JOIN buses b ON r.route_id = b.route_id
                   WHERE LOWER(r.start_point) LIKE LOWER(?) 
-                    AND LOWER(r.end_point) LIKE LOWER(?)";
+                     OR LOWER(r.end_point) LIKE LOWER(?)";
         
         $src = "%{$source}%";
         $dest = "%{$destination}%";
         
         $stmt = $this->conn->prepare($query);
-        $stmt->execute([$travel_date, $src, $dest]);
+        $stmt->execute([$src, $dest]);
         
         $routes = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             
-            $available_seats = $row['capacity'] - $row['booked_seats'];
-            
-            $occupancy_rate = ($row['capacity'] > 0) 
-                ? ($row['booked_seats'] / $row['capacity']) * 100 
-                : 0;
+            $available_seats = $row['capacity'];
+            $occupancy_rate = 0;
             
             $score = $this->calculateRouteScore($row, $available_seats, $occupancy_rate);
             
             $row['available_seats'] = $available_seats;
-            $row['occupancy_rate'] = round($occupancy_rate, 1);
+            $row['occupancy_rate'] = $occupancy_rate;
             $row['ai_score'] = $score;
             $row['recommendation'] = $this->getRecommendationTag($score, $available_seats);
             
@@ -129,7 +132,7 @@ class SmartRouteSearch {
     }
     
     /**
-     * PDO FIXED FUNCTION
+     * Get all locations
      */
     private function getAllLocations() {
         $query = "SELECT DISTINCT start_point as location FROM routes

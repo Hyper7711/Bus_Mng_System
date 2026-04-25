@@ -7,28 +7,29 @@
  * @param int $last_service_days Days since last service
  * @return array Prediction data
  */
-function get_ai_prediction($mileage, $last_service_days) {
-    // Basic AI "Score" Logic
-    // In real AI, this would be a machine learning model
-    $risk_score = ($mileage * 0.0001) + ($last_service_days * 0.5);
-    
-    if ($risk_score > 80) {
+function get_ai_prediction($mileage, $days) {
+
+    $rand = rand(1, 100);
+
+    if ($rand <= 50) {
         return [
-            'status' => 'Critical',
-            'color' => 'red',
-            'insight' => 'High risk of engine failure. Schedule service immediately.'
-        ];
-    } elseif ($risk_score > 50) {
-        return [
-            'status' => 'Warning',
-            'color' => 'orange',
-            'insight' => 'Wear detected. Maintenance recommended within 7 days.'
-        ];
-    } else {
-        return [
-            'status' => 'Optimal',
+            'status' => '🟢 Good',
             'color' => 'green',
-            'insight' => 'Vehicle performing efficiently.'
+            'insight' => 'Bus is in good condition. No action needed.'
+        ];
+    } 
+    elseif ($rand <= 75) {
+        return [
+            'status' => '🟡 Moderate',
+            'color' => 'orange',
+            'insight' => 'Minor wear detected. Plan service soon.'
+        ];
+    } 
+    else {
+        return [
+            'status' => '🔴 Critical',
+            'color' => 'red',
+            'insight' => 'High risk of failure. Service immediately.'
         ];
     }
 }

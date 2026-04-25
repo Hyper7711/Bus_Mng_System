@@ -1,6 +1,7 @@
 <?php include 'db_connect.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,9 +24,17 @@
         }
 
         @keyframes gradient {
-            0% {background-position: 0% 50%;}
-            50% {background-position: 100% 50%;}
-            100% {background-position: 0% 50%;}
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         /* ✅ Card Container */
@@ -79,6 +88,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>🚍 Student Bus Management System</h1>
@@ -93,5 +103,5 @@
         </a>
     </div>
 </body>
-</html>
 
+</html>
